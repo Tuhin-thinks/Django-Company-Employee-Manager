@@ -137,3 +137,7 @@ GitHub.sublime-settings
 .history
 
 **/venv
+
+# ide specific dirs
+**.idea
+**.vscode
