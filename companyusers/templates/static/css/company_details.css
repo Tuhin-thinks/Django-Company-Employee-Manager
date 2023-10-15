@@ -1,0 +1,33 @@
+h2 {
+    font-family: sans-serif;
+    font-size: 1.5em;
+    color: #000;
+    margin-bottom: 0.5em;
+}
+
+.info-label {
+    font-family: Allerta Stencil;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: #000;
+    margin-bottom: 0.5em;
+    /* extend border little to the right of the actual text */
+    padding-right: 1.2em;
+    border-bottom: 1px solid #000;
+}
+
+.info-text {
+    font-family: Allerta Stencil;
+    font-size: 1.0em;
+    color: #000;
+    margin-bottom: 0.5em;
+
+}
+
+.na {
+    font-family: Allerta Stencil;
+    font-size: 1.0em;
+    color: #6f6f6f;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}

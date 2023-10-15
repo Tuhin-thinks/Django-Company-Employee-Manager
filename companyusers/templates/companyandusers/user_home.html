@@ -1,0 +1,144 @@
+{% extends "companyandusers/base.html" %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="{% static 'css/user_home.css' %}">
+{% endblock header %}
+{% block body %}
+    <div class="container rounded bg-white mt-5 mb-5">
+        <form action={% url 'companyusers:user_home' %} method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-3 border-right">
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                        <img class="rounded-circle mt-5"
+                             width="150px"
+                             height="175px"
+                             src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                             alt="user profile image">
+                        <span class="font-weight-bold">{{ user.first_name|add:" "|add:user.last_name }}</span><span class="text-black-50">{{ user.email }}</span>
+                    </div>
+                </div>
+                <div class="col-md-5 border-right">
+                    <div class="p-3 py-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-right">Profile Settings</h4>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label class="labels">Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="first name"
+                                       value="{{ user.first_name }}"
+                                       name="first_name"
+                                       required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="labels">Surname</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="{{ user.last_name }}"
+                                       name="last_name"
+                                       placeholder="surname"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="labels">Mobile Number</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="enter phone number"
+                                       name="phone"
+                                       value="{{ user.phone }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Address Line 1</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="enter address line 1"
+                                       name="address1"
+                                       value="{{ user.address1 }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Address Line 2</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="enter address line 2"
+                                       name="address2"
+                                       value="{{ user.address2 }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Postcode</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="enter postcode"
+                                       value="{{ user.postcode }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">State</label>
+                                <input type="text"
+                                       name="state"
+                                       class="form-control"
+                                       placeholder="enter state"
+                                       value="{{ user.state }}">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Email ID</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="enter email id"
+                                       value="{{ user.email }}"
+                                       name="email"
+                                       required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="labels">Education</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="education"
+                                       name="education"
+                                       value="{{ user.education }}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="labels">Country</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="country"
+                                       name="country"
+                                       value="{{ user.country }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="labels">City/Region</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="{{ user.city }}"
+                                       name="city"
+                                       placeholder="city">
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 py-5">
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <button class="btn btn-danger" onclick="logout()">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock body %}
+{% block scripts %}
+    <script>
+        function logout() {
+            window.location.href = "{% url 'companyusers:user_logout' %}";
+        }
+    </script>
+{% endblock scripts %}

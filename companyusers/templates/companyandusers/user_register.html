@@ -1,0 +1,135 @@
+{% extends "companyandusers/base.html" %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}" />
+{% endblock header %}
+{% block body %}
+    <div class="d-flex aligns-items-center justify-content-center card text-center position-absolute top-50 start-50 translate-middle w-25">
+        <div class="card border-0">
+            <div class="card-body border-0">
+                <form action={% url "companyusers:user_register" %} method="post">
+                    {% csrf_token %}
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="user_email">Email address</label>
+                        <input type="email"
+                               name="email"
+                               id="user_email"
+                               class="form-control text-center"
+                               placeholder="user@mail.com" />
+                    </div>
+                    <div class="row mb-4">
+                        <!-- First Name -->
+                        <div class="col">
+                            <label class="form-label" for="first_name">First Name</label>
+                            <input type="text"
+                                   name="first_name"
+                                   id="first_name"
+                                   class="form-control text-center"
+                                   placeholder="John" />
+                        </div>
+                        <div class="col">
+                            <!-- Last Name -->
+                            <label class="form-label" for="last_name">Last Name</label>
+                            <input type="text"
+                                   name="last_name"
+                                   id="last_name"
+                                   class="form-control text-center"
+                                   placeholder="Doe" />
+                        </div>
+                    </div>
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="user_password">Password</label>
+                        <input type="password"
+                               name="password"
+                               id="user_password"
+                               class="form-control text-center"
+                               placeholder="Enter your password here" />
+                    </div>
+                    <div class="form-outline mb-4 text-center">
+                        <!-- Choose company -->
+                        <label class="form-label" for="myDropdown">Current Company</label>
+                        <input class="form-control text-center"
+                               name="company"
+                               type="text"
+                               placeholder="Start Typing..."
+                               id="myInput"
+                               onkeyup="filterFunction()"
+                               onclick="myFunction()">
+                        <div class="dropdown">
+                            <div id="myDropdown" class="dropdown-content">
+                                <div id="dropdown-values" class="dropdown-values">
+                                    {% for company in companies %}<a onclick="setValueOfInput(this)">{{ company.name }}</a>{% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- div containing summary of all fields that raised form errors  -->
+                    {% if form %}
+                        <div class="form-outline mb-4">
+                            <ul class="alert alert-danger list-group mb-2">
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}
+                                            <li class="d-flex list-item bg-transparent mx-auto">
+                                                <p>
+                                                    <b>{{ field.label }}</b>:
+                                                </p>
+                                                <p>{{ error }}</p>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <!-- Submit button -->
+                    <div class="form-outline mb-4">
+                        <button type="submit" class="btn btn-primary btn-block mb-4">Create Account</button>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <!-- Or, register user -->
+                        <div class="mx-2">Already have an account?</div>
+                        <div class="mx-2">
+                            <a href={% url "companyusers:user_login" %}>Login</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block scripts %}
+    <script>
+        console.log("{{ companies | safe }}")
+        function myFunction() {
+            $("#dropdown-values").addClass("show");
+          }
+
+          $(document).click(function(e) {
+            if( e.target.id != 'myInput') {
+              $("#dropdown-values").removeClass("show");
+            }
+          });
+
+          function filterFunction() {
+            var input, filter, a, i;
+            filter = $("#myInput").val().toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+              txtValue = a[i].textContent || a[i].innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "block";
+              } else {
+                a[i].style.display = "none";
+              }
+            }
+          }
+
+          function setValueOfInput(e) {
+              $("#myInput").val(e.innerHTML);
+          }
+    </script>
+{% endblock scripts %}
