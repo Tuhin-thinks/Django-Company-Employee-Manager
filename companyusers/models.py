@@ -1,7 +1,11 @@
-from django.utils.text import slugify
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -15,7 +19,9 @@ class Company(models.Model):
     founded = models.DateField(null=True, blank=True)
     industry = models.CharField(max_length=100, null=True, blank=True)
 
-    funding_amt = models.DecimalField(max_digits=30, decimal_places=2, null=True, blank=True)
+    funding_amt = models.DecimalField(
+        max_digits=30, decimal_places=2, null=True, blank=True
+    )
     funding_rounds = models.IntegerField(null=True, blank=True)
     last_funding_date = models.DateField(null=True, blank=True)
 
@@ -26,7 +32,9 @@ class Company(models.Model):
     crunchbase_url = models.URLField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(f"{self.normalize_name(self.name)} - {self.normalize_name(self.location)}")
+        self.slug = slugify(
+            f"{self.normalize_name(self.name)} - {self.normalize_name(self.location)}"
+        )
         super().save(*args, **kwargs)
 
     def normalize_name(self, name):
@@ -42,7 +50,9 @@ class Company(models.Model):
             name = self.normalize_name(name)
             company = self.objects.filter(name=name).first()
             if not company:
-                company = self.objects.create(name=name, location=location, ceo=ceo, employees=employees)
+                company = self.objects.create(
+                    name=name, location=location, ceo=ceo, employees=employees
+                )
             return company
         else:
             raise ValueError("Invalid data")
@@ -63,7 +73,9 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault("is_user", True)
         extra_fields.setdefault("is_admin", True)
-        return self._create_user(email, password, **{**extra_fields, "is_superuser": True})
+        return self._create_user(
+            email, password, **{**extra_fields, "is_superuser": True}
+        )
 
     def create_user(self, email, password, **extra_fields):
         extra_fields.setdefault("is_user", True)
@@ -73,7 +85,9 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
-    password = models.CharField(validators=[MaxLengthValidator(20), MinLengthValidator(8)], max_length=20)
+    password = models.CharField(
+        validators=[MaxLengthValidator(20), MinLengthValidator(8)], max_length=20
+    )
     email = models.EmailField(max_length=100, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -87,6 +101,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=100, null=True, blank=True)
     address1 = models.CharField(max_length=100, null=True, blank=True)
     address2 = models.CharField(max_length=100, null=True, blank=True)
+
+    token = models.CharField(max_length=100, null=True, blank=True)
 
     is_user = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

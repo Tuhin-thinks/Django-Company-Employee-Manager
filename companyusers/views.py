@@ -1,6 +1,7 @@
-from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
 from .forms import CustomUserForm, UserUpdateForm
 from .models import Company
 
@@ -19,9 +20,17 @@ def user_login(request):
                     return redirect(request.GET.get("redirect_to"))
                 return redirect("companyusers:user_home")
             else:
-                return render(request, "companyandusers/user_login.html", {"error": "Incorrect Password"})
+                return render(
+                    request,
+                    "companyandusers/user_login.html",
+                    {"error": "Incorrect Password"},
+                )
         else:
-            return render(request, "companyandusers/user_login.html", {"error": "User does not exist"})
+            return render(
+                request,
+                "companyandusers/user_login.html",
+                {"error": "User does not exist"},
+            )
 
     # GET request
     return render(request, "companyandusers/user_login.html")
@@ -46,14 +55,22 @@ def user_register(request):
             return redirect("companyusers:user_home")
         else:
             return render(
-                request, "companyandusers/user_register.html", {"form": user_form, "companies": list(all_company_names)}
+                request,
+                "companyandusers/user_register.html",
+                {"form": user_form, "companies": list(all_company_names)},
             )
 
     # GET request
-    return render(request, "companyandusers/user_register.html", {"companies": list(all_company_names)})
+    return render(
+        request,
+        "companyandusers/user_register.html",
+        {"companies": list(all_company_names)},
+    )
 
 
-@login_required(login_url="companyusers:user_login", redirect_field_name="redirect_to")
+@login_required(
+    login_url="companyusers:user_login", redirect_field_name="redirect_to"
+)
 def user_home(request):
     user = request.user
     if request.method == "POST":
@@ -65,7 +82,9 @@ def user_home(request):
             return redirect("companyusers:user_home")
         else:
             print(user_form.errors)
-            return render(request, "companyandusers/user_home.html", {"form": user_form})
+            return render(
+                request, "companyandusers/user_home.html", {"form": user_form}
+            )
 
     user_form = UserUpdateForm(instance=user)
     return render(request, "companyandusers/user_home.html", {"form": user_form})
@@ -77,17 +96,27 @@ def user_logout(request):
 
 
 def company_list(request):
-    companies = Company.objects.all().values("name", "location", "ceo", "employees", "slug")
+    companies = Company.objects.all().values(
+        "name", "location", "ceo", "employees", "slug"
+    )
 
     # exclude slug from the list to view to the user, only used for redirecting to company detail page
     return render(
         request,
         "companyandusers/company_list.html",
-        {"data": list(companies), "data_keys": ["name", "location", "ceo", "employees"], "excluded": ["slug"]},
+        {
+            "data": list(companies),
+            "data_keys": ["name", "location", "ceo", "employees"],
+            "excluded": ["slug"],
+        },
     )
 
 
-@login_required(login_url="companyusers:user_login", redirect_field_name="redirect_to")
+@login_required(
+    login_url="companyusers:user_login", redirect_field_name="redirect_to"
+)
 def company_detail(request, slug):
     company = get_object_or_404(Company, slug=slug)
-    return render(request, "companyandusers/company_detail.html", {"company": company})
+    return render(
+        request, "companyandusers/company_detail.html", {"company": company}
+    )
